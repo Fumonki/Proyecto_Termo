@@ -41,6 +41,7 @@ class Perdidas:
 
     '''Parte branch'''
     def Branch_Converge(self, flujo_entrada, D_entrada): # = K RUN
+        vel_entrada = flujo_entrada/(60000*(np.pi * D_entrada**2/4))  #m/s
         y_b = flujo_entrada/ (flujo_entrada + self.m_dot)  #Ver que esten en mismas unidades flujo de entrada y m_dot
         Beta_b = D_entrada/self.D  #D_entrada es diametro de la tuberia a entrar, self_D es de la tuberia original a la que entra líquido
 
@@ -49,10 +50,12 @@ class Perdidas:
         else:
             if y_b <= 0.35:
                 C = 0.9 * (1 - y_b)
+            else:
+                C = 0.55
 
         K_b = C * (1 + 1 * (y_b / Beta_b**2)**2 - 2 * (1 - y_b)**2 - 0 * (y_b / Beta_b)**2)
 
-        return [K_b, K_b] #No retorna la perdida directamente, ya que depende de la velocidad de la rama madre y la rama saliente
+        return self.Perdida_vel(K_b, K_b, vel_entrada)  
         
             
     def Branch_Diverge(self, flujo_salida, D_salida):
@@ -84,6 +87,11 @@ class Perdidas:
     
 
     def Perdida_vel(self, K_b, K_m, vel_salida):
-        return K_b * vel_salida**2/(2*9.81) + K_m *self.V_dato *2/(2*9.81)  #Retorna la perdida de la rama madre y la rama saliente, ya que depende de la velocidad de ambas ramas
+        self.Kb = K_b
+        self.vel_salida = vel_salida
+        return K_b * vel_salida**2/(2*9.81) + K_m *self.V_dato**2/(2*9.81)  #Retorna la perdida de la rama madre y la rama saliente, ya que depende de la velocidad de ambas ramas
+    
+    def Arreglo_ida(self):
+        return self.Kb * self.vel_salida**2/(2*9.81)
     
         

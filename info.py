@@ -41,6 +41,12 @@ valvula_globo = {
     'kd': 3.6,
 }
 
+valvula_bola = {
+    'k1': 300,
+    'k2': 0.017,
+    'kd': 3.6,
+}
+
 codos_threaded = {
     'k1': 800,
     'k2': 0.140,
